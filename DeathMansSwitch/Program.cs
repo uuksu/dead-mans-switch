@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DeathMansSwitch
@@ -34,6 +35,7 @@ namespace DeathMansSwitch
         static void Main(string[] args)
         {
             POINT p;
+            SpinWait spin = new SpinWait();
             while (true)
             {
                 GetCursorPos(out p);
@@ -45,7 +47,7 @@ namespace DeathMansSwitch
                     lastY = p.Y;
                 }
 
-                if ((DateTime.Now - lastMovementTime).Seconds >= 10)
+                if ((DateTime.Now - lastMovementTime).Seconds >= 30)
                 {
                     Process process = Process.GetProcesses().FirstOrDefault(i => i.ProcessName.Contains("HP.Sprout.ThreeDSnapshot"));
 
@@ -56,6 +58,7 @@ namespace DeathMansSwitch
                         lastMovementTime = DateTime.Now;
                     }
                 }
+                spin.SpinOnce();
             }
 
 
